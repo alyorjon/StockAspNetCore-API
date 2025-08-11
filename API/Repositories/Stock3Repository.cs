@@ -66,9 +66,9 @@ namespace API.Repositories
             var response = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             if (response.Count == 0) return (null,totalCount);
             return (response, totalCount);
-
-
         }
+
+        
 
         public async Task<Stock3?> GetById(int id)
         {
@@ -101,5 +101,36 @@ namespace API.Repositories
             return existing;
         }
 
+        public async Task<List<Stock3>?> GetBySearchAsync(string search)
+        {
+            var query = _context.Stock3s.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.Symbol.ToLower().Contains(search.ToLower()) ||
+                                         x.CompanyName.ToLower().Contains(search.ToLower())|| x.Industry.ToLower().Contains(search.ToLower()));
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Stock3s.CountAsync();
+        }
+
+        public async Task<decimal> GetAveragePriceAsync()
+        {
+            return await _context.Stock3s.AverageAsync(x=>x.Price);
+        }
+
+        public async Task<List<Stock3>?> GetUpdatedInRangeAsync(DateTime start, DateTime end)
+        {
+            var query = _context.Stock3s.AsQueryable();
+            if (start != DateTime.MinValue && end != DateTime.MinValue)
+            {
+                query = query.Where(x => x.LastUpdated >= start && x.LastUpdated <= end);
+                return await query.ToListAsync();
+            }
+            return await Task.FromResult<List<Stock3>?>(null);
+        }
     }
 }

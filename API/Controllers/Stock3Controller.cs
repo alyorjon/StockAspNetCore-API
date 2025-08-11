@@ -53,6 +53,31 @@ namespace API.Controllers
             var response = await _stock3Service.GetByPagination(page, pageSize, sortBy);
             return Ok(response);
         }
+
+        [HttpGet("search/{search}")]
+        public async Task<IActionResult> GetBySearchAsync([FromRoute] string search)
+        {
+            var response = await _stock3Service.GetBySearchAsync(search);
+            return Ok(response);
+        }
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            var response = await _stock3Service.GetCountAsync();
+            return Ok(response);
+        }
+        [HttpGet("averagePrice")]
+        public async Task<IActionResult> GetAveragePriceAsync()
+        {
+            var response = await _stock3Service.GetAveragePriceAsync();
+            return Ok(response);
+        }
+        [HttpGet("updatedInRange")]
+        public async Task<IActionResult> GetUpdatedInRangeAsync([FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            var response = await _stock3Service.GetUpdatedInRangeAsync(start, end);
+            return Ok(response);
+        }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStock3Dto dto)
         {

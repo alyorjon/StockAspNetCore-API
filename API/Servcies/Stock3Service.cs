@@ -91,5 +91,27 @@ namespace API.Servcies
             return true;
         }
 
+        public async Task<List<Stock3Dto>?> GetBySearchAsync(string search)
+        {
+            var response = await _stock3Repository.GetBySearchAsync(search);
+            if (response == null) return null;
+            return response.Select(x => x.ToStock3Dto()).ToList();
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _stock3Repository.GetCountAsync();
+        }
+
+        public async Task<decimal> GetAveragePriceAsync()
+        {
+            return await _stock3Repository.GetAveragePriceAsync();
+        }
+
+        public Task<List<Stock3Dto>?> GetUpdatedInRangeAsync(DateTime start, DateTime end)
+        {
+            return _stock3Repository.GetUpdatedInRangeAsync(start, end)
+                .ContinueWith(task => task.Result?.Select(x => x.ToStock3Dto()).ToList());
+        }
     }
 }
