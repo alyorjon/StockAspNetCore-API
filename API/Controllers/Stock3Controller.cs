@@ -21,6 +21,38 @@ namespace API.Controllers
             return Ok(stock3s);
         }
 
+        [HttpGet("symbol/{symbol}")]
+        public async Task<IActionResult> GetBySymbolAsync([FromRoute] string symbol)
+        {
+            var response = await _stock3Service.GetBySymbolAsync(symbol);
+            return Ok(response);
+        }
+
+        [HttpGet("companyName/{companyName}")]
+        public async Task<IActionResult> GetByCompanyNameAsync([FromRoute] string companyName)
+        {
+            var response = await _stock3Service.GetByCompanyNameAsync(companyName);
+            return Ok(response);
+        }
+        [HttpGet("priceRange/{min:decimal}/{max:decimal}")]
+        public async Task<IActionResult> GetByPriceRangeAsync([FromRoute] decimal min, [FromRoute] decimal max)
+        {
+            var response = await _stock3Service.GetByPriceRangeAsync(min, max);
+            return Ok(response);
+        }
+        [HttpGet("top/{count:int}")]
+        public async Task<IActionResult> GetByPriceTopAsync([FromRoute] int count)
+        {
+            var response = await _stock3Service.GetByPriceTopAsync(count);
+            return Ok(response);
+        }
+
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetByPagination([FromQuery] int page=1, [FromQuery] int pageSize=10, [FromQuery] string sortBy = "id")
+        {
+            var response = await _stock3Service.GetByPagination(page, pageSize, sortBy);
+            return Ok(response);
+        }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStock3Dto dto)
         {

@@ -2,6 +2,7 @@ using API.Data;
 using API.DTOs;
 using API.Interfaces.Stock3s;
 using API.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories
@@ -18,11 +19,55 @@ namespace API.Repositories
             return await _context.Stock3s.ToListAsync();
         }
 
+
+        public async Task<Stock3?> GetBySymbolAsync(string symbol)
+        {
+            return await _context.Stock3s.FirstOrDefaultAsync(x => x.Symbol.ToLower() == symbol.ToLower());
+        }
+
+        public async Task<Stock3?> GetByCompanyNameAsync(string companyName)
+        {
+            return await _context.Stock3s.FirstOrDefaultAsync(x=> x.CompanyName.ToLower().Contains(companyName.ToLower()));
+        }
+
         public async Task<Stock3> Create(Stock3 stock3)
         {
             await _context.AddAsync(stock3);
             await _context.SaveChangesAsync();
             return stock3;
+        }
+
+
+        public async Task<List<Stock3>?> GetByPriceRangeAsync(decimal min, decimal max)
+        {
+            var response = await _context.Stock3s.Where(x => x.Price >= min && x.Price <= max).ToListAsync();
+            if (response == null) return null;
+            return response;
+        }
+
+        public async Task<List<Stock3>?> GetByPriceTopAsync(int count)
+        {
+            var response = await _context.Stock3s.OrderByDescending(x =>(decimal)x.Price).Take(count).ToListAsync();
+            if (response == null) return null;
+            return response;
+        }
+
+
+        public async Task<(List<Stock3>?,int)> GetByPagination(int page, int pageSize, string sortBy = "id")
+        {
+            var query = _context.Stock3s.AsQueryable();
+            query = sortBy.ToLower() switch
+            {
+                "symbol" => query.OrderBy(x => x.Symbol),
+                "companyname" => query.OrderBy(x => x.CompanyName),
+                _ => query.OrderBy(x => x.Id)
+            };
+            var totalCount= await query.CountAsync();
+            var response = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            if (response.Count == 0) return (null,totalCount);
+            return (response, totalCount);
+
+
         }
 
         public async Task<Stock3?> GetById(int id)

@@ -11,7 +11,7 @@ namespace API.Model
         public string Symbol { get; set; }
         public string CompanyName { get; set; }
         public string Industry { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public long MarketCap { get; set; }
         public DateTime LastUpdated { get; set; } = DateTime.Now;
     }
