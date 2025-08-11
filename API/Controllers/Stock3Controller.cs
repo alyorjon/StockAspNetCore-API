@@ -1,8 +1,6 @@
 
 using API.DTOs;
 using API.Interfaces.Stock3s;
-using API.Model;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
