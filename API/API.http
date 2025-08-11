@@ -1,0 +1,32 @@
+@API_HostAddress = http://localhost:5262/api
+@NUMBER= 5
+### Get All stocks
+GET {{API_HostAddress}}/Stock
+Accept: application/json
+
+### Get by ID
+GET {{API_HostAddress}}/Stock/{{NUMBER}} HTTP/1.1
+Accept: application/json
+### Create Stock
+POST {{API_HostAddress}}/Stock
+Content-Type: application/json
+Accept: application/json
+
+{
+    "symbol":"Yes",
+    "companyName":"YES gilamlari",
+    "price":2222,
+    "marketCap":232323,
+    "industry":"Service"
+}
+
+### Update By ID
+PATCH {{API_HostAddress}}/Stock/{{NUMBER}}
+Content-Type: application/json
+Accept:  application/json
+
+{
+    "industry":"Momo"
+}
+### Delete By ID
+DELETE {{API_HostAddress}}/Stock/{{NUMBER}}
